@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4eee5">
+  <meta name="description" content="Notre invitation de mariage">
+  <title>Notre mariage — Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Cinzel:wght@400;500;600&family=Jost:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f4eee5; --paper: #fffaf2; --terracotta: #b9674e;
+      --terracotta-dark: #98503d; --brown: #38271f; --muted: #806f63;
+      --line: rgba(56,39,31,.2); --serif: "Bodoni Moda", Georgia, serif;
+      --script: "Pinyon Script", cursive; --smallcaps: "Cinzel", serif;
+      --sans: "Jost", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--cream); color: var(--brown); font-family: var(--sans); font-weight: 300; }
+    body.locked { overflow: hidden; }
+    a { color: inherit; }
+    button { font: inherit; }
+    .eyebrow { font: 500 .68rem var(--smallcaps); letter-spacing: .23em; text-transform: uppercase; color: var(--terracotta-dark); }
+    .section { padding: 6.2rem 1.25rem; position: relative; overflow: hidden; }
+    .inner { max-width: 980px; margin: 0 auto; }
+    .section-title { font: 400 clamp(2.2rem, 8vw, 4.1rem)/1.08 var(--serif); text-align: center; margin: .7rem 0 1rem; }
+    .section-intro { text-align: center; max-width: 560px; margin: 0 auto 3rem; color: var(--muted); line-height: 1.8; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .word { display: inline-block; opacity: 0; transform: translateY(12px); transition: opacity .7s ease, transform .7s ease; margin-right: .22em; }
+    .word.show { opacity: 1; transform: translateY(0); }
+    /* Opening envelope */
+    .opening { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: var(--cream); transition: opacity 1.1s ease, visibility 1.1s ease; }
+    .opening.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+    .opening-note { position: absolute; top: 11%; text-align: center; padding: 0 1rem; }
+    .opening-note p { font: 400 clamp(1.7rem, 6vw, 2.6rem) var(--serif); margin: .6rem 0; }
+    .envelope-wrap { width: min(86vw, 410px); height: 270px; position: relative; perspective: 1000px; margin-top: 35px; }
+    .envelope { position: absolute; inset: 45px 0 0; background: var(--terracotta); border-radius: 4px; box-shadow: 0 24px 55px rgba(56,39,31,.18); overflow: visible; }
+    .envelope:before, .envelope:after { content:""; position:absolute; bottom:0; width:0; height:0; border-style:solid; z-index:3; }
+    .envelope:before { left:0; border-width: 0 0 190px 205px; border-color: transparent transparent #c77960 transparent; }
+    .envelope:after { right:0; border-width: 190px 0 0 205px; border-color: transparent transparent transparent #a95743; }
+    .flap { position:absolute; z-index:4; left:0; top:0; width:0; height:0; border-left:205px solid transparent; border-right:205px solid transparent; border-top:145px solid #c98268; transform-origin: top; transition: transform 1.2s cubic-bezier(.65,0,.35,1); }
+    .letter { position:absolute; z-index:2; width:84%; height:205px; left:8%; top:15px; background:var(--paper); display:grid; place-items:center; text-align:center; padding:1rem; transition: transform 1.25s .5s cubic-bezier(.2,.7,.2,1); box-shadow:0 4px 18px rgba(56,39,31,.12); }
+    .letter strong { font: 400 2.5rem var(--script); color:var(--terracotta-dark); }
+    .seal { position:absolute; z-index:5; left:50%; top:115px; transform:translateX(-50%); width:62px; height:62px; border-radius:50%; background:#823e32; color:#f9e9d8; display:grid; place-items:center; font:500 1rem var(--smallcaps); box-shadow:0 4px 12px #71382d66; transition:opacity .35s; }
+    .opening.open .flap { transform:rotateX(180deg); z-index:1; }
+    .opening.open .seal { opacity:0; }
+    .opening.open .letter { transform:translateY(-155px); }
+    .open-btn, .cta { border:1px solid var(--terracotta); color:var(--paper); background:var(--terracotta); padding: .95rem 1.5rem; letter-spacing:.08em; font:500 .72rem var(--smallcaps); text-decoration:none; display:inline-block; cursor:pointer; transition:background .3s, color .3s, transform .3s; }
+    .open-btn { position:absolute; bottom:10%; }
+    .open-btn:hover, .cta:hover { background:transparent; color:var(--terracotta-dark); transform:translateY(-2px); }
+    /* Hero */
+    .hero { min-height:100svh; display:flex; align-items:center; justify-content:center; text-align:center; position:relative; color:#fffaf2; padding:5rem 1rem; background:linear-gradient(180deg,rgba(35,23,18,.2),rgba(35,23,18,.68)), url("photos/couple.jpg") center/cover no-repeat, #8a6554; }
+    .hero:after { content:""; position:absolute; inset:16px; border:1px solid rgba(255,250,242,.55); pointer-events:none; }
+    .hero-content { position:relative; z-index:1; max-width:800px; }
+    .hero .eyebrow { color:#f2d9c8; }
+    .names { font:400 clamp(4rem, 15vw, 8.5rem)/.95 var(--script); margin:1.4rem 0; text-shadow:0 3px 24px #25160f66; }
+    .amp { color:#e5b69f; font-size:.7em; }
+    .hero-sub { font:400 clamp(1rem,3vw,1.3rem) var(--serif); letter-spacing:.04em; }
+    .date-line { margin:1.5rem 0 2.5rem; font:500 .75rem var(--smallcaps); letter-spacing:.22em; }
+    .countdown { display:flex; justify-content:center; gap:clamp(.7rem,4vw,2rem); margin-top:2.4rem; }
+    .countdown div { min-width:52px; }
+    .countdown strong { display:block; font:400 clamp(1.6rem,6vw,2.5rem) var(--serif); }
+    .countdown span { font:400 .58rem var(--smallcaps); letter-spacing:.13em; }
+    /* Story */
+    .story { background:var(--paper); }
+    .timeline { max-width:660px; margin:3.5rem auto 0; position:relative; }
+    .timeline:before { content:""; position:absolute; left:20px; top:0; bottom:0; width:1px; background:var(--line); }
+    .timeline-progress { position:absolute; left:20px; top:0; width:1px; height:0; background:var(--terracotta); transition:height .15s linear; }
+    .moment { position:relative; padding:0 0 3rem 65px; }
+    .dot { position:absolute; left:13px; top:5px; width:15px; height:15px; border:1px solid var(--terracotta); border-radius:50%; background:var(--paper); }
+    .moment h3 { font:400 1.7rem var(--serif); margin:0 0 .4rem; }
+    .moment time { font:500 .62rem var(--smallcaps); letter-spacing:.18em; color:var(--terracotta-dark); }
+    .moment p { color:var(--muted); line-height:1.8; margin:.6rem 0 0; }
+    /* Gallery */
+    .gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .photo { margin:0; height:260px; overflow:hidden; background:#dfd0c1; position:relative; }
+    .photo:nth-child(even) { transform:translateY(35px); }
+    .photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.2s ease; }
+    .photo:hover img { transform:scale(1.05); }
+    .photo figcaption { position:absolute; bottom:12px; left:14px; color:white; font:400 1.2rem var(--script); text-shadow:0 2px 8px #0008; }
+    /* Program */
+    .program { background:var(--brown); color:var(--paper); }
+    .program .eyebrow { color:#d99a7e; }
+    .program .section-intro { color:#d6c6b8; }
+    .schedule { max-width:650px; margin:0 auto; }
+    .event { display:grid; grid-template-columns:95px 1fr; gap:1rem; padding:1.35rem 0; border-bottom:1px solid #fff3; align-items:start; }
+    .event time { color:#e5aa8e; font:500 .75rem var(--smallcaps); letter-spacing:.1em; padding-top:.3rem; }
+    .event h3 { font:400 1.55rem var(--serif); margin:0 0 .25rem; }
+    .event p { margin:0; color:#d6c6b8; line-height:1.6; font-size:.93rem; }
+    /* Place */
+    .place-card { display:grid; gap:2rem; align-items:center; }
+    .place-info { text-align:center; }
+    .place-info p { color:var(--muted); line-height:1.8; }
+    .map { width:100%; height:300px; border:0; filter:grayscale(.35) sepia(.12); }
+    /* Dress code */
+    .dress { background:#eee3d6; text-align:center; }
+    .swatches { display:flex; justify-content:center; gap:1.2rem; margin:2rem 0; }
+    .swatch { width:58px; height:58px; border-radius:50%; border:4px solid #fff8; box-shadow:0 4px 15px #38271f1a; }
+    .swatch-labels { display:flex; justify-content:center; gap:1.5rem; color:var(--muted); font-size:.78rem; }
+    /* RSVP/footer */
+    .rsvp { text-align:center; background:var(--paper); }
+    .rsvp .cta { margin-top:1rem; }
+    .deadline { font-size:.85rem; color:var(--muted); margin-top:1.2rem; }
+    footer { text-align:center; padding:3.5rem 1rem; background:var(--brown); color:var(--paper); }
+    footer p { font:400 1.8rem var(--script); margin:0 0 1rem; }
+    footer strong { font:500 .8rem var(--smallcaps); letter-spacing:.2em; }
+    footer small { display:block; color:#d6c6b8; margin-top:1rem; letter-spacing:.12em; }
+    @media(min-width:700px) {
+      .section { padding:8rem 2rem; }
+      .gallery-grid { grid-template-columns:repeat(3,1fr); gap:18px; }
+      .photo { height:370px; }
+      .photo:nth-child(3n+2) { transform:translateY(45px); }
+      .place-card { grid-template-columns:.8fr 1.2fr; text-align:left; }
+      .place-info { text-align:left; }
+      .timeline:before,.timeline-progress { left:50%; }
+      .moment { width:50%; padding:0 55px 3.5rem 0; text-align:right; }
+      .moment:nth-child(even) { margin-left:50%; padding:0 0 3.5rem 55px; text-align:left; }
+      .dot { left:auto; right:-7px; }
+      .moment:nth-child(even) .dot { left:-7px; right:auto; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      *, *:before, *:after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
+      .reveal { opacity:1; transform:none; }
+      .word { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body class="locked">
+  <div class="opening" id="opening" aria-label="Ouvrir l'invitation">
+    <div class="opening-note"><span class="eyebrow">Une belle histoire à célébrer</span><p>Vous êtes cordialement invités</p></div>
+    <div class="envelope-wrap">
+      <div class="envelope">
+        <div class="letter"><span class="eyebrow">Avec joie et amour</span><strong id="letterNames">P1 & P2</strong><span class="eyebrow">vous invitent à leur mariage</span></div>
+        <div class="flap"></div><div class="seal" id="seal">P&amp;P</div>
+      </div>
+    </div>
+    <button class="open-btn" id="openBtn">Ouvrir notre invitation</button>
+  </div>
+
+  <main id="site">
+    <header class="hero">
+      <div class="hero-content">
+        <span class="eyebrow reveal">Le début d'un nouveau chapitre</span>
+        <h1 class="names reveal"><span id="name1">Prénom 1</span> <span class="amp">&amp;</span> <span id="name2">Prénom 2</span></h1>
+        <p class="hero-sub reveal">Nous serions heureux de vous avoir à nos côtés pour célébrer notre union.</p>
+        <p class="date-line reveal" id="heroDate">JOUR · DATE · MOIS · ANNÉE</p>
+        <div class="countdown reveal" aria-label="Compte à rebours">
+          <div><strong id="days">000</strong><span>Jours</span></div>
+          <div><strong id="hours">00</strong><span>Heures</span></div>
+          <div><strong id="minutes">00</strong><span>Minutes</span></div>
+          <div><strong id="seconds">00</strong><span>Secondes</span></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section story">
+      <div class="inner">
+        <div class="reveal"><p class="eyebrow" style="text-align:center">Chaque histoire a son commencement</p><h2 class="section-title" data-words>Notre histoire</h2><p class="section-intro">Deux chemins qui se croisent, des souvenirs qui se construisent et une promesse pour la vie.</p></div>
+        <div class="timeline">
+          <div class="timeline-progress" id="timelineProgress"></div>
+          <article class="moment reveal"><span class="dot"></span><time>LE PREMIER CHAPITRE</time><h3>Notre rencontre</h3><p>Le jour où nos regards se sont croisés et où une belle histoire a commencé. Remplacez ce texte par votre souvenir.</p></article>
+          <article class="moment reveal"><span class="dot"></span><time>UN MOMENT INOUBLIABLE</time><h3>Notre premier rendez-vous</h3><p>Un sourire, quelques mots et cette évidence : nous avions envie de nous revoir.</p></article>
+          <article class="moment reveal"><span class="dot"></span><time>POUR LA VIE</time><h3>La demande en mariage</h3><p>Un « oui » qui ouvre le plus beau des chapitres : celui que nous écrirons ensemble.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="reveal"><p class="eyebrow" style="text-align:center">Quelques instants précieux</p><h2 class="section-title" data-words>Nos souvenirs</h2><p class="section-intro">Un aperçu de notre bonheur, en attendant de le partager avec vous.</p></div>
+        <div class="gallery-grid">
+          <figure class="photo reveal"><img src="photos/photo-1.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Un instant à deux</figcaption></figure>
+          <figure class="photo reveal"><img src="photos/photo-2.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Un sourire</figcaption></figure>
+          <figure class="photo reveal"><img src="photos/photo-3.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Notre bonheur</figcaption></figure>
+          <figure class="photo reveal"><img src="photos/photo-4.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Ensemble</figcaption></figure>
+          <figure class="photo reveal"><img src="photos/photo-5.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Pour toujours</figcaption></figure>
+          <figure class="photo reveal"><img src="photos/photo-6.jpg" alt="Souvenir des mariés" loading="lazy"><figcaption>Notre histoire</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section program">
+      <div class="inner">
+        <div class="reveal"><p class="eyebrow" style="text-align:center">Une journée à partager</p><h2 class="section-title" data-words>Le programme</h2><p class="section-intro">Nous avons hâte de vivre chacun de ces instants avec vous.</p></div>
+        <div class="schedule">
+          <article class="event reveal"><time>10 H 00</time><div><h3>Accueil des invités</h3><p>Retrouvons-nous et prenons le temps de nous installer.</p></div></article>
+          <article class="event reveal"><time>11 H 00</time><div><h3>Cérémonie</h3><p>Le moment où nous nous dirons oui.</p></div></article>
+          <article class="event reveal"><time>13 H 00</time><div><h3>Photos & cocktail</h3><p>Des sourires, des photos et de beaux échanges.</p></div></article>
+          <article class="event reveal"><time>15 H 00</time><div><h3>Repas & célébration</h3><p>Un repas festif pour célébrer notre union.</p></div></article>
+          <article class="event reveal"><time>18 H 00</time><div><h3>Remerciements</h3><p>Un dernier moment ensemble pour vous remercier.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="reveal"><p class="eyebrow" style="text-align:center">Retrouvons-nous ici</p><h2 class="section-title" data-words>Le lieu</h2></div>
+        <div class="place-card">
+          <div class="place-info reveal"><h3 id="venueName" style="font:400 2rem var(--serif)">Nom de la salle</h3><p id="venueAddress">Adresse, ville</p><a class="cta" id="directions" href="https://www.google.com/maps" target="_blank" rel="noopener">Ouvrir l'itinéraire</a></div>
+          <iframe class="map reveal" id="mapFrame" title="Carte du lieu du mariage" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Cotonou&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dress">
+      <div class="inner reveal">
+        <p class="eyebrow">L'élégance du jour</p><h2 class="section-title" data-words>Tenue de cérémonie</h2>
+        <p class="section-intro">Nous vous invitons à porter une tenue élégante dans les tons doux et chaleureux de notre journée. Merci d'éviter le blanc réservé aux mariés.</p>
+        <div class="swatches"><span class="swatch" style="background:#f4eee5"></span><span class="swatch" style="background:#b9674e"></span><span class="swatch" style="background:#38271f"></span></div>
+        <div class="swatch-labels"><span>Crème</span><span>Terracotta</span><span>Brun profond</span></div>
+      </div>
+    </section>
+
+    <section class="section rsvp">
+      <div class="inner reveal">
+        <p class="eyebrow">Votre présence est notre plus beau cadeau</p>
+        <h2 class="section-title" data-words>Confirmer ma présence</h2>
+        <p class="section-intro">Merci de nous confirmer votre présence avant la date indiquée afin que nous puissions préparer au mieux cette belle journée.</p>
+        <a class="cta" id="rsvpLink" href="https://forms.google.com" target="_blank" rel="noopener">Je confirme ma présence</a>
+        <p class="deadline">Réponse souhaitée avant le <strong id="rsvpDeadline">DATE LIMITE</strong></p>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>Merci de faire partie de notre histoire</p><strong id="footerInitials">P &amp; P</strong><small id="hashtag">#NotreBelleHistoire</small></footer>
+
+  <script>
+    /* ===================== PERSONNALISEZ VOTRE INVITATION ICI ===================== */
+    const CONFIG = {
+      prenom1: "Prénom 1",
+      prenom2: "Prénom 2",
+      initiales: "P&P",
+      dateISO: "2027-06-12T10:00:00", // Format : AAAA-MM-JJTHH:MM:SS (heure locale)
+      dateAffichee: "SAMEDI · 12 JUIN 2027",
+      salle: "Nom de la salle",
+      adresse: "Adresse complète, ville",
+      rechercheMaps: "Nom de la salle, ville",
+      lienRSVP: "https://forms.google.com", // Remplacez par le lien de votre formulaire
+      dateLimite: "1er MAI 2027",
+      hashtag: "#NotreBelleHistoire"
+    };
+    /* ===================== FIN DE LA PERSONNALISATION ===================== */
+
+    const $ = (id) => document.getElementById(id);
+    $("name1").textContent = CONFIG.prenom1; $("name2").textContent = CONFIG.prenom2;
+    $("letterNames").textContent = CONFIG.initiales; $("seal").textContent = CONFIG.initiales;
+    $("heroDate").textContent = CONFIG.dateAffichee; $("venueName").textContent = CONFIG.salle;
+    $("venueAddress").textContent = CONFIG.adresse; $("rsvpDeadline").textContent = CONFIG.dateLimite;
+    $("footerInitials").textContent = CONFIG.initiales; $("hashtag").textContent = CONFIG.hashtag;
+    $("rsvpLink").href = CONFIG.lienRSVP;
+    const mapQuery = encodeURIComponent(CONFIG.rechercheMaps);
+    $("directions").href = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+    $("mapFrame").src = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("openBtn").addEventListener("click", () => {
+      $("opening").classList.add("open");
+      window.setTimeout(() => {
+        $("opening").classList.add("gone");
+        document.body.classList.remove("locked");
+        if (!reducedMotion) revealObserver.observeAll?.();
+      }, reducedMotion ? 20 : 1750);
+    });
+
+    function updateCountdown() {
+      const target = new Date(CONFIG.dateISO).getTime();
+      let diff = Math.max(0, target - Date.now());
+      const d = Math.floor(diff / 86400000); diff %= 86400000;
+      const h = Math.floor(diff / 3600000); diff %= 3600000;
+      const m = Math.floor(diff / 60000); const s = Math.floor((diff % 60000) / 1000);
+      $("days").textContent = String(d).padStart(3,"0");
+      $("hours").textContent = String(h).padStart(2,"0");
+      $("minutes").textContent = String(m).padStart(2,"0");
+      $("seconds").textContent = String(s).padStart(2,"0");
+    }
+    updateCountdown(); window.setInterval(updateCountdown, 1000);
+
+    const revealObserver = {
+      observer: null,
+      observeAll() {
+        if (reducedMotion) return;
+        this.observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add("visible"); this.observer.unobserve(entry.target); }
+          });
+        }, {threshold:.13});
+        document.querySelectorAll(".reveal").forEach(el => this.observer.observe(el));
+      }
+    };
+    if (reducedMotion) document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
+    else revealObserver.observeAll();
+
+    // Révélation progressive des titres, mot par mot.
+    document.querySelectorAll("[data-words]").forEach(title => {
+      const words = title.textContent.trim().split(/\s+/);
+      title.textContent = "";
+      words.forEach((word, i) => {
+        const span = document.createElement("span"); span.className = "word"; span.textContent = word;
+        title.appendChild(span);
+        if (i < words.length - 1) title.appendChild(document.createTextNode(" "));
+      });
+      if (!reducedMotion) {
+        const obs = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            title.querySelectorAll(".word").forEach((w, i) => setTimeout(() => w.classList.add("show"), i * 170));
+            obs.unobserve(title);
+          }
+        }), {threshold:.5});
+        obs.observe(title);
+      } else title.querySelectorAll(".word").forEach(w => w.classList.add("show"));
+    });
+
+    // La ligne de la frise se dessine en fonction du défilement.
+    const timeline = document.querySelector(".timeline");
+    function drawTimeline() {
+      if (!timeline || reducedMotion) return;
+      const rect = timeline.getBoundingClientRect();
+      const visible = Math.min(rect.height, Math.max(0, window.innerHeight * .65 - rect.top));
+      $("timelineProgress").style.height = `${visible}px`;
+    }
+    window.addEventListener("scroll", drawTimeline, {passive:true});
+    drawTimeline();
+
+    // Petit effet de profondeur sur les photos, sans effet si l'utilisateur préfère moins de mouvement.
+    if (!reducedMotion) {
+      const photos = [...document.querySelectorAll(".photo")];
+      window.addEventListener("scroll", () => {
+        photos.forEach((photo, i) => {
+          const r = photo.getBoundingClientRect();
+          if (r.bottom > 0 && r.top < innerHeight) {
+            const offset = (r.top - innerHeight / 2) * (i % 2 ? -.018 : .018);
+            photo.style.translate = `0 ${offset}px`;
+          }
+        });
+      }, {passive:true});
+    }
+  </script>
+</body>
+</html>
